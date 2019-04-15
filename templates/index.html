@@ -3,22 +3,39 @@
 {% block page_content %}
   <div class="container">
     <div class="form-group">
-      <p>Time lapse:</p>
-      <p><label for="waitSeconds">Wait time(s):</label><input type="number" name="waitSeconds" value="{{ waitSeconds }}"></p>
-      <p><label for="seriesName">Series:</label><input type="text" name="seriesName" value="{{ seriesName }}"></p>
-      <button type="submit" class="btn btn-dark" value="StartTimeLapse" name="submit">Start</button>
-      <button type="submit" class="btn btn-dark" value="StopTimeLapse" name="submit">Stop</button>
-      <button type="submit" class="btn btn-dark" value="UpdateTimeLapse" name="submit">Update</button>
+      <h2>Time lapse</h2>
+      <div class="form-group">
+        <fieldset>
+          <label class="control-label" for="waitSeconds">Wait time(s):</label>
+          <input class="form-control" type="number" name="waitSeconds" id="waitSeconds" value="{{ waitSeconds }}">
+        </fieldset>
+      </div>
+      <div class="form-group">
+        <fieldset>
+          <label class="control-label" for="seriesName">Series:</label>
+          <input class="form-control" type="text" name="seriesName" value="{{ seriesName }}">
+        </fieldset>
+      </div>
+      <div class="btn-group" role="group" aria-label="LapseButtons">
+        <button type="submit" class="btn btn-primary" value="StartTimeLapse" name="submit" {{ startLapseEnabled }}>Start</button>
+        <button type="submit" class="btn btn-primary" value="StopTimeLapse" name="submit" {{ stopLapseEnabled }}>Stop</button>
+        <button type="submit" class="btn btn-primary" value="UpdateTimeLapse" name="submit" {{ stopLapseEnabled }}>Update</button>
+      </div>
     </div>
     <div class="form-group">
-        <button type="submit" name="submit" class="btn btn-dark" value="Take Picture">Take Picture</button>
-        <img src="images/test.jpg" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
+      <h2>Test Image</h2>
+      <button type="submit" name="submit" class="btn btn-primary" value="Take Picture">Take Picture</button>
+      <img src="images/test.jpg" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
     </div>
     <div class="form-group">
-      <p>Blinkt tasks:</p>
-      <input type="number" name="secRainbow" value="{{ secRainbow }}">
-      <button type="submit" class="btn btn-dark" value="Rainbow" name="submit">Rainbow</button>
-      <button type="submit" class="btn btn-dark" value="ColorRotate" name="submit">Color Rotate</button>
+      <h2>Blinkt tasks</h2>
+      <div class="form-group">
+        <input class="form-control" type="number" name="secRainbow" value="{{ secRainbow }}">
+      </div>
+      <div class="btn-group" role="group" aria-label="LapseButtons">
+        <button type="submit" class="btn btn-primary" value="Rainbow" name="submit">Rainbow</button>
+        <button type="submit" class="btn btn-primary" value="ColorRotate" name="submit">Color Rotate</button>
+      </div>
     </div>
   </div>
 {% endblock %}

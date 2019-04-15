@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, redirect, url_for, send_from_
 from flask_paginate import Pagination, get_page_args
 
 from functools import total_ordering
+from itertools import zip_longest
 
 import re
 import colorsys
@@ -42,8 +43,12 @@ if(app.config['ENV']!='development'):
 
 @app.before_first_request
 def initialize():
-  if os.path.exists('images'):
-    os.mkdir('images')
+  if not os.path.exists('./images'):
+    os.mkdir('./images')
+
+def grouper(iterable, n, fillvalue=None):
+  args = [iter(iterable)] * n
+  return zip_longest(*args, fillvalue=fillvalue)
 
 def rainbow(runSeconds: int = 5, clear: bool = True, decreaseBrightness: bool = False):
   spacing = 360.0 / 8.0
@@ -117,12 +122,15 @@ def takepicture(imageName: str):
 def timeLapse():
   global curPicture, waitSeconds, seriesName
 
+  if not os.path.exists('./images/%s' % seriesName):
+    os.mkdir('./images/%s' % seriesName)
+
   with picamera.PiCamera() as camera:
     camera.resolution = (1920, 1080)
     time.sleep(1)
 
     while bolLapseRunning:
-      filename = 'images/%s-%s.jpg' % (seriesName, curPicture)
+      filename = 'images/%s/%s.jpg' % (seriesName, curPicture)
       camera.capture(filename)
       curPicture += 1
       time.sleep(waitSeconds)
@@ -175,16 +183,12 @@ def imagelist():
 def send_image(path):
     return send_from_directory('images', path)
 
-@app.route('/xml/<path:path>')
-def send_xml(path):
-    return send_from_directory(app.config['XML_PATH'], path)
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
 
   now = datetime.datetime.now()
   timeString = now.strftime("%Y-%m-%d %H:%M")
-  global secRainbow, bolLapseRunning, seriesName
+  global secRainbow, bolLapseRunning, seriesName, waitSeconds, seriesName
 
   if request.method == 'POST':
     secRainbow = int(request.form['secRainbow'])
@@ -209,10 +213,11 @@ def index():
 
   templateData = {
     'time': timeString,
-    'startLapseEnabled': bolLapseRunning if "disabled" else "",
-    'stopLapseEnabled': not bolLapseRunning if "disabled" else "",
+    'startLapseEnabled': "disabled" if bolLapseRunning else "",
+    'stopLapseEnabled': "disabled" if not bolLapseRunning else "",
     'secRainbow': secRainbow,
-    'waitSeconds': waitSeconds
+    'waitSeconds': waitSeconds,
+    'seriesName': seriesName
   }
 
   return render_template('index.html', **templateData)
