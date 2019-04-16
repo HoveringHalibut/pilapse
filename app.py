@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for, send_from_directory, current_app
+from flask import Flask, request, render_template, redirect, url_for, send_from_directory, current_app, Response
 from flask_paginate import Pagination, get_page_args
 
 from functools import total_ordering
@@ -129,6 +129,20 @@ def timeLapse():
       curPicture += 1
       time.sleep(waitSeconds)
 
+def gen(camera):
+  camera.resolution = (1920, 1080)
+  while True:
+    frame = camera._get_frame()
+    yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+@app.route('/video_feed')
+def video_feed():
+  return Response(gen(picamera.PiCamera()), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/preview')
+def imagepreview():
+  return render_template('preview.html')
+
 @app.route('/imagelist')
 def imagelist():
 
@@ -223,6 +237,7 @@ blinkt.show()
 if __name__ == '__main__':
   if(app.config['ENV']!='development'):
     import picamera
+    import cv2
     app.run(port=80,host="0.0.0.0")
   else:
     app.run(port=5000)

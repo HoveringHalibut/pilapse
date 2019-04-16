@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+  <div class="container">
+    <div class="form-group">
+      <h2>Image Preview</h2>
+      <div class="form-group">
+        <img style="width: 100%; display: block;" name="imagePreview" src="{{ url_for('video_feed') }}" alt="Image Preview">
+      </div>
+  </div>
+{% endblock %}
