@@ -35,13 +35,6 @@ seriesName = 'default'
 
 rePath = re.compile("[^0-9]*([0-9]*)([smhdwMy]).*")
 
-if __name__ == '__main__':
-  if(app.config['ENV']!='development'):
-    import picamera
-    app.run(port=80,host="0.0.0.0")
-  else:
-    app.run(port=5000)
-
 @app.before_first_request
 def initialize():
   if not os.path.exists('./images'):
@@ -226,3 +219,10 @@ def index():
 # Clear blinkt in case it was left on after a unexpected shutdown or crash
 blinkt.clear()
 blinkt.show()
+
+if __name__ == '__main__':
+  if(app.config['ENV']!='development'):
+    import picamera
+    app.run(port=80,host="0.0.0.0")
+  else:
+    app.run(port=5000)
