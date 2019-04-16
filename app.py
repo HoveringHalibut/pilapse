@@ -237,7 +237,6 @@ blinkt.show()
 if __name__ == '__main__':
   if(app.config['ENV']!='development'):
     import picamera
-    import cv2
     app.run(port=80,host="0.0.0.0")
   else:
     app.run(port=5000)
