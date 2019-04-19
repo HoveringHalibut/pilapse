@@ -145,6 +145,8 @@ def imagepreview():
 @app.route('/imagelist')
 def imagelist():
 
+  global seriesName
+
   search = False
   q = request.args.get('q')
   if q:
@@ -152,12 +154,13 @@ def imagelist():
 
   images = []
 
-  it = os.scandir('./images/')
+  it = os.scandir('./images/%s' % seriesName)
+  
   for entry in it:
       if not entry.name.startswith('.') and entry.name.endswith('.jpg') and entry.is_file():
           images.append(entry.name)
 
-  images.sort()
+  images.sort(key=lambda f: int(filter(str.isdigit, f)))
 
   page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
   print(per_page)
