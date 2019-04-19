@@ -158,7 +158,7 @@ def imagelist():
   
   for entry in it:
       if not entry.name.startswith('.') and entry.name.endswith('.jpg') and entry.is_file():
-          images.append(entry.name)
+          images.append('%s/%s' % (seriesName, entry.name))
 
   images.sort(key=lambda f: int(''.join(filter(str.isdigit, f))))
 
